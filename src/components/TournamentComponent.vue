@@ -4,9 +4,11 @@
       <input v-model="artist_name" type="text">
       <button type="button" @click="getSongs()">Send</button>
     </form>
-    <pre>
-      {{songs.map(v => v.title)}}
-    </pre>
+    <div v-for="song in songs">
+      <img :src="song.img" alt="">
+      {{song.title}}
+      {{song.img}}
+    </div>
   </div>
 </template>
 
@@ -27,7 +29,12 @@ export default {
       this.$axios.post('http://localhost:88/api/get-artist-tracks', {artist_name: this.artist_name})
           .then(response => {
             this.items = response.data;
-            this.songs = response.data
+            this.songs = response.data.map((v) => {
+              return {
+                title: v.title,
+                img: 'https://' + v.ogImage.slice(0, -2) + "200x200"
+              }
+            })
             console.log(response.data)
           })
           .catch(error => {
