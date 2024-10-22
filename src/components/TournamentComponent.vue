@@ -1,13 +1,62 @@
 <template>
+<!--  :style="{'background-image': 'url(src/assets/' + image_number + '.jpg)'}"-->
   <div class="tournament-wrapper">
     <form>
       <input v-model="artist_name" type="text">
       <button type="button" @click="getSongs()">Send</button>
     </form>
-    <div v-for="song in songs">
-      <img :src="song.img" alt="">
-      {{song.title}}
-      {{song.img}}
+    <div class="wrapper">
+      <div class="song-blocks">
+        <div class="song-block" v-for="song in songs.slice(0,16)">
+          <div class="song-block-content">
+            <img :src="song.img" alt="">
+            <p>{{song.title}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="one_eighth_final">
+        <div class="block" v-for="item in 8">
+
+        </div>
+      </div>
+      <div class="quarter_final">
+        <div class="block" v-for="item in 4">
+
+        </div>
+      </div>
+      <div class="semi_final">
+      <div class="block" v-for="item in 2">
+
+      </div>
+    </div>
+      <div class="semi_final">
+        <div class="block" >
+          <p>Winner</p>
+        </div>
+      </div>
+      <div class="semi_final">
+        <div class="block" v-for="item in 2">
+
+        </div>
+      </div>
+      <div class="quarter_final">
+        <div class="block" v-for="item in 4">
+
+        </div>
+      </div>
+      <div class="one_eighth_final">
+        <div class="block" v-for="item in 8">
+
+        </div>
+      </div>
+      <div class="song-blocks">
+        <div class="song-block reverse" v-for="song in songs.slice(16,32)">
+          <div class="song-block-content">
+            <img :src="song.img" alt="">
+            <p>{{song.title}}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,6 +67,7 @@ export default {
   data() {
     return {
       artist_name: '',
+      image_number: 1,
       songs: []
     }
   },
@@ -25,6 +75,9 @@ export default {
     msg: String
   },
   methods: {
+    getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
     getSongs() {
       this.$axios.post('http://localhost:88/api/get-artist-tracks', {artist_name: this.artist_name})
           .then(response => {
@@ -66,9 +119,112 @@ a {
   background: #ffffff;
   box-shadow: 0 0 10px #00000050;
   border-radius: 10px;
-  width: 1400px;
+  width: 1800px;
   height: 760px;
   margin: auto;
   padding: 1em;
+  transition: 1s;
+  background-size: cover;
+}
+.song-blocks {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.song-block {
+  height: 36px;
+  display: flex;
+  width: 240px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  padding: 1px;
+  background: #fff;
+  border-radius: 3px;
+  position: relative;
+  &-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: 0.3s;
+    img {
+      height: 36px;
+      width: 36px;
+      transition: 0.3s;
+    }
+    p {
+      width: 100%;
+      font-size: 12px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  &:hover {
+    box-shadow: 0 0 10px #00000040;
+    .song-block-content {
+      img {
+        height: 48px;
+        width: 48px;
+        z-index: 1;
+      }
+    }
+  }
+}
+.song-block.reverse {
+  flex-direction: row-reverse;
+}
+.one_eighth_final {
+  width: 200px;
+  height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .block {
+    height: 36px;
+    border: 1px solid red;
+    margin-bottom: 10px;
+  }
+}
+.quarter_final {
+  width: 200px;
+  height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .block {
+    height: 36px;
+    border: 1px solid red;
+    margin-bottom: 10px;
+  }
+}
+.semi_final {
+  width: 200px;
+  height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .block {
+    height: 36px;
+    border: 1px solid red;
+    margin-bottom: 10px;
+  }
+}
+.winner {
+  width: 200px;
+  height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .block {
+    height: 36px;
+    border: 1px solid red;
+    margin-bottom: 10px;
+  }
 }
 </style>
