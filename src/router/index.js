@@ -2,17 +2,23 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import TournamentComponent from "@/components/TournamentComponent.vue";
 import HelloWorld from "@/components/HelloWorld.vue";
+import GroupLevel from "@/components/GroupLevel.vue";
 
 const routes = [
     {
+        path: '/',
+        name: 'Main',
+        component: HelloWorld
+    },
+    {
         path: '/group',
         name: 'Group',
-        component: TournamentComponent
+        component: GroupLevel
     },
     {
         path: '/tournament',
         name: 'Tournament',
-        component: HelloWorld
+        component: TournamentComponent
     }
 ]
 

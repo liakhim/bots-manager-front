@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p>Count: {{ counterStore.count }}</p>
-    <p>Double Count: {{ counterStore.doubleCount }}</p>
-    <button @click="counterStore.increment">Increment</button>
+    <router-link to="group">Group</router-link>
+    <hr>
+    <router-link to="tournament">Tournament</router-link>
   </div>
 </template>
 
