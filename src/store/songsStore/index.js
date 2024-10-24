@@ -6,6 +6,7 @@ export const useSongsStore = defineStore('songsStore', {
     state: () => ({
         artist_name: '',
         artist_info: [],
+        selected_artist: null,
         songs: [],
         loading: false,
         error: null,
@@ -37,6 +38,10 @@ export const useSongsStore = defineStore('songsStore', {
         },
         setArtistName(name) { // Экшен для изменения artist_name
             this.artist_name = name;
+        },
+        setSelectedArtist(id) { // Экшен для изменения artist_name
+            alert(id)
+            this.selected_artist = this.artist_info.find(v => v.id === id);
         },
     },
 });
