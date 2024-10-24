@@ -1,14 +1,14 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
 import TournamentComponent from "@/components/TournamentComponent.vue";
-import HelloWorld from "@/components/HelloWorld.vue";
 import GroupLevel from "@/components/GroupLevel.vue";
+import SearchForm from "@/components/SearchForm.vue";
 
 const routes = [
     {
         path: '/',
-        name: 'Main',
-        component: HelloWorld
+        name: 'SearchForm',
+        component: SearchForm
     },
     {
         path: '/group',
