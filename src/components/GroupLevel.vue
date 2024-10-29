@@ -1,7 +1,10 @@
 <template>
   <div class="group-level-wrapper">
-    <div class="row" v-for="it in 2">
-      <div class="group-table" v-for="item in 4">
+    <pre>
+      {{songs.map(v=>v.title)}}
+    </pre>
+    <div class="row">
+      <div class="group-table" v-for="group in 4">
         <div class="title-line">
           <p>Group A</p>
         </div>
@@ -41,53 +44,47 @@
 </template>
 
 <script>
+import {useSongsStore} from "@/store/songsStore";
+import {computed, ref, watch} from "vue";
+
 export default {
   name: 'GroupLevelComponent',
-  props: {},
-  data() {
+  setup() {
+    const songsStore = useSongsStore();
+
+    // Локальное состояние для двустороннего связывания с инпутом
+    const artistName = ref(songsStore.artist_name);
+
+    // Наблюдение за изменениями локального состояния
+    watch(artistName, (newName) => {
+      songsStore.setArtistName(newName);
+    });
+
+    const selectedArtist = ref(songsStore.selected_artist);
+
+    watch(selectedArtist, (newName) => {
+      songsStore.setArtistName(newName);
+    });
+
+    const songs = computed(() => songsStore.songs);
+    const selected_artist = computed(() => songsStore.selected_artist);
+
+
+
     return {
-      songs: [],
-      group_objects: [
-        {
-          id: 0,
-          letter: 'A',
-          image: '',
-          title: 'title of',
-          rating: 1
-        }
-      ]
-    }
+      selected_artist,
+      songs
+    };
   },
-  methods: {
-    getSongs() {
-      this.$axios.post('http://localhost:88/api/get-artist-tracks', {artist_name: 'kino'})
-          .then(response => {
-            this.items = response.data;
-            this.group_objects = response.data.map((v) => {
-              return {
-                title: v.title,
-                img: 'https://' + v.ogImage.slice(0, -2) + "200x200"
-              }
-            }).slice(0, 4)
-            console.log(response.data)
-          })
-          .catch(error => {
-            console.error('Ошибка при получении данных:', error);
-          });
-    }
-  },
-  mounted() {
-    this.getSongs()
-  }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
   h3 {
     color: green;
   }
   .group-level-wrapper {
+    position: relative;
     background: #ffffff;
     box-shadow: 0 0 10px #00000050;
     border-radius: 10px;
@@ -122,7 +119,7 @@ export default {
       display: flex;
     }
     .progress-line {
-      height: 10px;
+      height: 5px;
       border: 1px solid green;
       width: 100%;
       display: flex;

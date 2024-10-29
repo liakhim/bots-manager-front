@@ -1,7 +1,5 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
@@ -13,14 +11,30 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #app {
+  position: relative;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background-image: url("src/assets/3333.webp");
+  background-size: cover;
+  height: 100vh;
+  margin: 0!important;
+  &::before {
+      content: '';
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      backdrop-filter: blur(10px);
+  }
+  //.mask {
+
+  //}
 }
 body {
   margin: 0;

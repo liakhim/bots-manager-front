@@ -5,7 +5,7 @@ import axios from 'axios';
 export const useSongsStore = defineStore('songsStore', {
     state: () => ({
         artist_name: '',
-        artist_info: [],
+        artist_info: null,
         selected_artist: null,
         songs: [],
         loading: false,
@@ -24,11 +24,12 @@ export const useSongsStore = defineStore('songsStore', {
                 this.loading = false; // Отключаем флаг загрузки
             }
         },
-        async fetchSongs(author) {
+        async fetchSongs() {
+            alert(this.selected_artist.id)
             this.loading = true; // Устанавливаем флаг загрузки
             this.error = null;   // Сбрасываем ошибки
             try {
-                const response = await axios.post('http://localhost:88/api/get-artist-tracks', {artist_name: author});
+                const response = await axios.post('http://localhost:88/api/get-artist-tracks', {artist_id: this.selected_artist.id});
                 this.songs = response.data; // Полностью заменяем массив песен
             } catch (error) {
                 this.error = 'Ошибка при получении данных: ' + error.message;

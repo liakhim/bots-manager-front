@@ -1,55 +1,57 @@
 <template>
-  <div class="search-form-wrapper">
-    <form @keydown.enter.prevent="getArtist">
-      <label>
-        <span></span>
-        <input name="author_name" type="text" placeholder="Исполнитель" v-model="artistName">
-      </label>
-      <div class="button-box">
-        <button type="button" @click="getArtist">
-          <span>Найти</span>
-        </button>
-      </div>
-    </form>
-    <div v-if="!!selected_artist" class="selected-author-wrapper">
-      <div class="selected-author-block">
-        <div class="selected-author-block-image">
-          <img :src="'https://' + selected_artist.ogImage.slice(0, -2) + '60x60'" alt="">
+  <div class="search-form-main-wrapper">
+    <div class="search-form-wrapper">
+      <form @keydown.enter.prevent="getArtist">
+        <label>
+          <span></span>
+          <input name="author_name" type="text" placeholder="Исполнитель" v-model="artistName">
+        </label>
+        <div class="button-box">
+          <button type="button" @click="getArtist">
+            <span>Найти</span>
+          </button>
         </div>
-        <div class="selected-author-block-name">
-          <p>{{selected_artist.name}}</p>
-        </div>
-      </div>
-    </div>
-    <div v-if="!!selected_artist" class="game-type-wrapper">
-      <div @click="$router.push('/group')" class="game-type">
-        <div class="game-type-image">
-          <img src="../assets/1.jpg" alt="">
-        </div>
-        <div class="game-type-text">
-          <p>Group Level + Play-off (32 songs)</p>
-        </div>
-      </div>
-      <div @click="$router.push('/tournament')" class="game-type">
-        <div class="game-type-image">
-          <img src="../assets/2.jpg" alt="">
-        </div>
-        <div class="game-type-text">
-          <p>Only Play-off (16 songs)</p>
-        </div>
-      </div>
-    </div>
-    <div v-if="artist_info.length" class="artist-list-wrapper">
-      <ul class="artist-list">
-        <li class="artist-list-item" v-for="artist in artist_info" @click="setSelectedArtist(artist.id)">
-          <div class="icon">
-            <img :src="'https://' + artist.ogImage.slice(0, -2) + '30x30'" alt="">
+      </form>
+      <div v-if="!!selected_artist" class="selected-author-wrapper">
+        <div class="selected-author-block">
+          <div class="selected-author-block-image">
+            <img :src="'https://' + selected_artist.ogImage.slice(0, -2) + '60x60'" alt="">
           </div>
-          <div class="text">
-            <p>{{artist.name}}</p>
+          <div class="selected-author-block-name">
+            <p>{{selected_artist.name}}</p>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
+      <div v-if="!!selected_artist" class="game-type-wrapper">
+        <div @click="$router.push('/group')" class="game-type">
+          <div class="game-type-image">
+            <img src="../assets/5.webp" alt="">
+          </div>
+          <div class="game-type-text">
+            <p>Group Level + Play-off (32 songs)</p>
+          </div>
+        </div>
+        <div @click="$router.push('/tournament')" class="game-type">
+          <div class="game-type-image">
+            <img src="../assets/4.webp" alt="">
+          </div>
+          <div class="game-type-text">
+            <p>Only Play-off (16 songs)</p>
+          </div>
+        </div>
+      </div>
+      <div v-if="!!artist_info && artist_info.length" class="artist-list-wrapper">
+        <ul class="artist-list">
+          <li class="artist-list-item" v-for="artist in artist_info" @click="setSelectedArtist(artist.id)">
+            <div class="icon">
+              <img :src="'https://' + artist.ogImage.slice(0, -2) + '30x30'" alt="">
+            </div>
+            <div class="text">
+              <p>{{artist.name}}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -85,7 +87,7 @@ export default {
 
     // Метод для вызова экшена fetchSongs
     const getSongs = () => {
-      songsStore.fetchSongs(artistName.value);
+      songsStore.fetchSongs();
     };
 
     // Метод для вызова экшена fetchSongs
@@ -95,6 +97,7 @@ export default {
 
     const setSelectedArtist = (id) => {
       songsStore.setSelectedArtist(id);
+      songsStore.fetchSongs()
     };
 
 
@@ -115,7 +118,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.search-form-main-wrapper {
+  padding: 50px;
+}
 .search-form-wrapper {
+  position: relative;
+  z-index: 1;
   background: #fff;
   width: 800px;
   margin: auto;
@@ -135,7 +143,7 @@ export default {
         border-radius: 10px 0 0 10px;
         border: 2px solid #000;
         border-right: none;
-        min-width: 500px;
+        min-width: 600px;
       }
     }
     .button-box {
