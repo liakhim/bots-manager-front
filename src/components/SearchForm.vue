@@ -25,7 +25,7 @@
       <div v-if="!!selected_artist" class="game-type-wrapper">
         <div @click="$router.push('/group')" class="game-type">
           <div class="game-type-image">
-            <img src="../assets/5.webp" alt="">
+            <img src="../assets/9999.webp" alt="">
           </div>
           <div class="game-type-text">
             <p>Group Level + Play-off (32 songs)</p>
@@ -33,7 +33,7 @@
         </div>
         <div @click="$router.push('/tournament')" class="game-type">
           <div class="game-type-image">
-            <img src="../assets/4.webp" alt="">
+            <img src="../assets/8888.webp" alt="">
           </div>
           <div class="game-type-text">
             <p>Only Play-off (16 songs)</p>

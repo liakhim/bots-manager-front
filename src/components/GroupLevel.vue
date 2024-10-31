@@ -1,20 +1,12 @@
 <template>
   <div class="group-level-wrapper">
-    <pre>
-      {{songs.map(v=>v.title)}}
-    </pre>
     <div class="row">
-      <div class="group-table" v-for="group in 4">
+      <div class="group-table" v-for="group in songs_for_groups">
         <div class="title-line">
-          <p>Group A</p>
+          <p>Group {{group.group_letter}}</p>
         </div>
         <div class="progress-line">
-          <div class="progress-line-step full-step"></div>
-          <div class="progress-line-step full-step"></div>
-          <div class="progress-line-step"></div>
-          <div class="progress-line-step"></div>
-          <div class="progress-line-step"></div>
-          <div class="progress-line-step"></div>
+          <div class="progress-line-step" v-for="(step, index) in 6" :class="{'full-step': index<group.group_progress}"></div>
         </div>
         <div class="header-line">
           <div></div>
@@ -22,9 +14,9 @@
           <div></div>
         </div>
         <div class="lines">
-          <div class="line" v-for="(line, index) in group_objects" :key="line.id">
+          <div class="line" v-for="(line, index) in group.group_songs" :key="line.id">
             <div class="line-cover">
-              <img :src="line.img" alt="">
+              <img :src="'https://' + line.ogImage.slice(0, -2) + '30x30'" alt="">
             </div>
             <div class="line-title">
               <p>{{line.title}}</p>
@@ -34,7 +26,7 @@
                 <img src="../assets/gold.svg" v-if="index === 0" alt="">
                 <img src="../assets/silver.svg" v-if="index === 1" alt="">
               </div>
-              <p>9</p>
+              <p>{{line.score}}</p>
             </div>
           </div>
         </div>
@@ -67,13 +59,13 @@ export default {
     });
 
     const songs = computed(() => songsStore.songs);
+    const songs_for_groups = computed(() => songsStore.songs_for_groups);
     const selected_artist = computed(() => songsStore.selected_artist);
-
-
 
     return {
       selected_artist,
-      songs
+      songs,
+      songs_for_groups
     };
   },
 }
@@ -85,7 +77,7 @@ export default {
   }
   .group-level-wrapper {
     position: relative;
-    background: #ffffff;
+    background: transparent;
     box-shadow: 0 0 10px #00000050;
     border-radius: 10px;
     width: 1800px;
@@ -97,38 +89,41 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    backdrop-filter: blur(20px);
     .row {
       display: flex;
       align-items: flex-start;
-      justify-content: space-between;
+      justify-content: space-around;
+      flex-wrap: wrap;
       margin: 10px;
     }
   }
   .group-table {
     width: 400px;
-    box-shadow: 0 0 10px #00000050;
+    box-shadow: 0 0 10px #000000;
     border-radius: 10px;
     cursor: pointer;
     transition: 1s;
-    &:hover {
-      transform: scale(1.03);
-    }
+    margin-bottom: 30px;
+    background: #ffffff;
+
     .title-line {
-      border: 1px solid green;
+      padding: 0 20px;
       width: 100%;
       display: flex;
     }
     .progress-line {
-      height: 5px;
-      border: 1px solid green;
-      width: 100%;
+      height: 4px;
+      border-radius: 3px;
+      width: calc(100% - 20px);
       display: flex;
-      margin: 10px 0 ;
+      margin: 0 10px 5px 10px;
+      border: 1px solid green;
       &-step {
         width: 16.66%;
-        border: 1px solid red;
         &.full-step {
-          background: red;
+          background: green;
+          border-radius: 0 3px 3px 0;
         }
       }
     }

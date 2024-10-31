@@ -1,16 +1,17 @@
 <template>
 <!--  :style="{'background-image': 'url(src/assets/' + image_number + '.jpg)'}"-->
   <div class="tournament-wrapper">
-    <form>
-      <input v-model="artist_name" type="text">
-      <button type="button" @click="getSongs()">Send</button>
-    </form>
+    <pre>
+      {{songs_for_play_off[0]}}
+    </pre>
     <div class="wrapper">
       <div class="song-blocks">
-        <div class="song-block" v-for="song in songs.slice(0,16)">
-          <div class="song-block-content">
-            <img :src="song.img" alt="">
-            <p>{{song.title}}</p>
+        <div class="song-couple" style="border: 1px solid orange" v-for="couple in songs_for_play_off.slice(0,4)">
+          <div class="song-block" v-for="song in couple.songs">
+            <div class="song-block-content">
+              <img :src="song.img" alt="">
+              <p>{{song.title}}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -62,40 +63,40 @@
 </template>
 
 <script>
+import {useSongsStore} from "@/store/songsStore";
+import {computed, ref, watch} from "vue";
+
 export default {
   name: 'TournamentComponent',
-  data() {
+  setup() {
+    const songsStore = useSongsStore();
+
+    // Локальное состояние для двустороннего связывания с инпутом
+    const artistName = ref(songsStore.artist_name);
+
+    // Наблюдение за изменениями локального состояния
+    watch(artistName, (newName) => {
+      songsStore.setArtistName(newName);
+    });
+
+    const selectedArtist = ref(songsStore.selected_artist);
+
+    watch(selectedArtist, (newName) => {
+      songsStore.setArtistName(newName);
+    });
+
+    const songs = computed(() => songsStore.songs);
+    const songs_for_groups = computed(() => songsStore.songs_for_groups);
+    const songs_for_play_off = computed(() => songsStore.songs_for_play_off);
+    const selected_artist = computed(() => songsStore.selected_artist);
+
     return {
-      artist_name: '',
-      image_number: 1,
-      songs: []
-    }
+      selected_artist,
+      songs,
+      songs_for_groups,
+      songs_for_play_off
+    };
   },
-  props: {
-    msg: String
-  },
-  methods: {
-    getRandomNumber(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
-    getSongs() {
-      this.$axios.post('http://localhost:88/api/get-artist-tracks', {artist_name: this.artist_name})
-          .then(response => {
-            this.items = response.data;
-            this.songs = response.data.map((v) => {
-              return {
-                title: v.title,
-                img: 'https://' + v.ogImage.slice(0, -2) + "200x200"
-              }
-            })
-            console.log(response.data)
-          })
-          .catch(error => {
-            console.error('Ошибка при получении данных:', error);
-          });
-    }
-  },
-  mounted() {}
 }
 </script>
 
@@ -116,6 +117,7 @@ a {
   color: #42b983;
 }
 .tournament-wrapper {
+  position: relative;
   background: #ffffff;
   box-shadow: 0 0 10px #00000050;
   border-radius: 10px;
