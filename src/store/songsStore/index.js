@@ -99,7 +99,7 @@ export const useSongsStore = defineStore('songsStore', {
                         this.songs_for_groups[groupIndex].group_songs.push(song);
                     }
 
-                    const coupleIndex = Math.floor(index / 4);
+                    const coupleIndex = Math.floor(index / 2);
 
                     if (coupleIndex < this.songs_for_play_off.length) {
                         this.songs_for_play_off[coupleIndex].songs.push(song)

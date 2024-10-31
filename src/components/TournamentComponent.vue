@@ -1,23 +1,18 @@
 <template>
 <!--  :style="{'background-image': 'url(src/assets/' + image_number + '.jpg)'}"-->
   <div class="tournament-wrapper">
-    <pre>
-      {{songs_for_play_off[0]}}
-    </pre>
     <div class="wrapper">
       <div class="song-blocks">
-        <div class="song-couple" style="border: 1px solid orange" v-for="couple in songs_for_play_off.slice(0,4)">
-          <div class="song-block" v-for="song in couple.songs">
-            <div class="song-block-content">
-              <img :src="song.img" alt="">
-              <p>{{song.title}}</p>
+        <div class="song-couple" v-for="couple in songs_for_play_off.slice(0,4)">
+          <div class="song-couple-lines"></div>
+          <div class="songs">
+            <div class="song-block" v-for="song in couple.songs">
+              <div class="song-block-content">
+                <img :src="'https://' + song.ogImage.slice(0, -2) + '30x30'" alt="">
+                <p>{{song.title}}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="one_eighth_final">
-        <div class="block" v-for="item in 8">
-
         </div>
       </div>
       <div class="quarter_final">
@@ -45,16 +40,16 @@
 
         </div>
       </div>
-      <div class="one_eighth_final">
-        <div class="block" v-for="item in 8">
-
-        </div>
-      </div>
       <div class="song-blocks">
-        <div class="song-block reverse" v-for="song in songs.slice(16,32)">
-          <div class="song-block-content">
-            <img :src="song.img" alt="">
-            <p>{{song.title}}</p>
+        <div class="song-couple" v-for="couple in songs_for_play_off.slice(4,8)">
+          <div class="song-couple-lines"></div>
+          <div class="songs">
+            <div class="song-block" v-for="song in couple.songs">
+              <div class="song-block-content">
+                <img :src="'https://' + song.ogImage.slice(0, -2) + '30x30'" alt="">
+                <p>{{song.title}}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -132,6 +127,20 @@ a {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  justify-content: center;
+  .song-couple {
+    border: 2px solid blue;
+    margin-bottom: 20px;
+    display: flex;
+    &-lines {
+      width: 30px;
+      border: 1px solid green
+    }
+    .songs {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }
 .wrapper {
   display: flex;

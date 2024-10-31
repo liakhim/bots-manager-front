@@ -4,6 +4,7 @@
       <div class="group-table" v-for="group in songs_for_groups">
         <div class="title-line">
           <p>Group {{group.group_letter}}</p>
+          <p>Open</p>
         </div>
         <div class="progress-line">
           <div class="progress-line-step" v-for="(step, index) in 6" :class="{'full-step': index<group.group_progress}"></div>
@@ -20,6 +21,11 @@
             </div>
             <div class="line-title">
               <p>{{line.title}}</p>
+              <div class="line-title-link">
+                <a href="#">
+                  <img src="../assets/ymlogo.svg" alt="">
+                </a>
+              </div>
             </div>
             <div class="line-total">
               <div class="line-total-medal">
@@ -109,8 +115,9 @@ export default {
 
     .title-line {
       padding: 0 20px;
-      width: 100%;
+      width: calc(100% - 40px);
       display: flex;
+      justify-content: space-between;
     }
     .progress-line {
       height: 4px;
@@ -134,6 +141,17 @@ export default {
         border: 1px solid #C9C9C9FF;
         height: 50px;
         overflow: hidden;
+        &:hover {
+          .line-title {
+            &-link {
+              z-index: 2;
+              img {
+                width: 100px;
+                filter: none;
+              }
+            }
+          }
+        }
         &:first-child {
           border-radius: 8px 8px 0 0;
           border-bottom: none;
@@ -162,11 +180,21 @@ export default {
           width: 100%;
           display: flex;
           align-items: center;
+          justify-content: space-between;
           p {
             margin: 0 0 0 10px;
             text-align: left;
             font-size: 12px;
             font-weight: bold;
+          }
+          &-link {
+            width: 100px;
+            padding: 0 10px 0 0;
+            img {
+              width: 100%;
+              transition: 0.5s;
+              filter: grayscale(1);
+            }
           }
         }
         &-total {
