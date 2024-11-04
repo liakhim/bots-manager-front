@@ -8,6 +8,7 @@ export const useSongsStore = defineStore('songsStore', {
         artist_info: null,
         selected_artist: null,
         songs: [],
+        active_group: {},
         songs_for_groups: [
             {
                 id: 0,
@@ -118,5 +119,8 @@ export const useSongsStore = defineStore('songsStore', {
         setSelectedArtist(id) { // Экшен для изменения artist_name
             this.selected_artist = this.artist_info.find(v => v.id === id);
         },
+        setActiveGroup(group_id) {
+            this.active_group = this.songs_for_groups.find(v => v.id === group_id)
+        }
     },
 });

@@ -1,38 +1,89 @@
 <template>
-  <div class="group-level-wrapper">
-    <div class="row">
-      <div class="group-table" v-for="group in songs_for_groups">
-        <div class="title-line">
-          <p>Group {{group.group_letter}}</p>
-          <p>Open</p>
-        </div>
-        <div class="progress-line">
-          <div class="progress-line-step" v-for="(step, index) in 6" :class="{'full-step': index<group.group_progress}"></div>
-        </div>
-        <div class="header-line">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div class="lines">
-          <div class="line" v-for="(line, index) in group.group_songs" :key="line.id">
-            <div class="line-cover">
-              <img :src="'https://' + line.ogImage.slice(0, -2) + '30x30'" alt="">
-            </div>
-            <div class="line-title">
-              <p>{{line.title}}</p>
-              <div class="line-title-link">
-                <a href="#">
-                  <img src="../assets/ymlogo.svg" alt="">
-                </a>
+  <div class="group-level-wrapper" :class="{expanded: expanded}">
+    <div class="row" :class="{expanded: expanded}">
+      <div class="expanded-group-card" v-if="expanded">
+          <pre style="border: 1px solid green">
+      {{ active_group.id }}
+    </pre>
+      </div>
+      <div class="column" :class="{expanded: expanded}">
+        <div class="group-table"
+             @click="setActiveGroup(group.id)"
+             v-for="(group, ind) in songs_for_groups.slice(0, 4)"
+             :style="{'z-index': ind, 'left': (expanded && ind < 4) ? ind*20 + 'px' : ind*420 + 'px', 'top': expanded ? ind*40 + 'px' : 0}"
+        >
+          <div class="title-line">
+            <p>Group {{group.group_letter}}</p>
+<!--            <p>Open</p>-->
+          </div>
+          <div class="progress-line">
+            <div class="progress-line-step" v-for="(step, index) in 6" :class="{'full-step': index<group.group_progress}"></div>
+          </div>
+          <div class="header-line">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div class="lines">
+            <div class="line" v-for="(line, index) in group.group_songs" :key="line.id">
+              <div class="line-cover">
+                <img :src="'https://' + line.ogImage.slice(0, -2) + '30x30'" alt="">
+              </div>
+              <div class="line-title">
+                <p>{{line.title}}</p>
+                <div class="line-title-link">
+                  <a href="#">
+                    <img src="../assets/ymlogo.svg" alt="">
+                  </a>
+                </div>
+              </div>
+              <div class="line-total">
+                <div class="line-total-medal">
+                  <img src="../assets/gold.svg" v-if="index === 0" alt="">
+                  <img src="../assets/silver.svg" v-if="index === 1" alt="">
+                </div>
+                <p>{{line.score}}</p>
               </div>
             </div>
-            <div class="line-total">
-              <div class="line-total-medal">
-                <img src="../assets/gold.svg" v-if="index === 0" alt="">
-                <img src="../assets/silver.svg" v-if="index === 1" alt="">
+          </div>
+        </div>
+        <div class="group-table"
+             @click="setActiveGroup(group.id)"
+             style="margin-top: 300px"
+             v-for="(group, ind) in songs_for_groups.slice(4,8)"
+             :style="{'z-index': ind + 4, 'left': (expanded && ind < 4) ? ind*20 + 80 + 'px' : ind*420 + 'px', 'top': expanded ? ind*40 - 140 + 'px' : 0}">
+          <div class="title-line">
+            <p>Group {{group.group_letter}}</p>
+            <p>Open</p>
+          </div>
+          <div class="progress-line">
+            <div class="progress-line-step" v-for="(step, index) in 6" :class="{'full-step': index<group.group_progress}"></div>
+          </div>
+          <div class="header-line">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div class="lines">
+            <div class="line" v-for="(line, index) in group.group_songs" :key="line.id">
+              <div class="line-cover">
+                <img :src="'https://' + line.ogImage.slice(0, -2) + '30x30'" alt="">
               </div>
-              <p>{{line.score}}</p>
+              <div class="line-title">
+                <p>{{line.title}}</p>
+                <div class="line-title-link">
+                  <a href="#">
+                    <img src="../assets/ymlogo.svg" alt="">
+                  </a>
+                </div>
+              </div>
+              <div class="line-total">
+                <div class="line-total-medal">
+                  <img src="../assets/gold.svg" v-if="index === 0" alt="">
+                  <img src="../assets/silver.svg" v-if="index === 1" alt="">
+                </div>
+                <p>{{line.score}}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -48,30 +99,39 @@ import {computed, ref, watch} from "vue";
 export default {
   name: 'GroupLevelComponent',
   setup() {
+    let expanded = ref(true);
+
+    const changeView = () => {
+      expanded.value = !expanded.value; // доступ к значению через .value
+    };
+
     const songsStore = useSongsStore();
-
-    // Локальное состояние для двустороннего связывания с инпутом
-    const artistName = ref(songsStore.artist_name);
-
-    // Наблюдение за изменениями локального состояния
-    watch(artistName, (newName) => {
-      songsStore.setArtistName(newName);
-    });
 
     const selectedArtist = ref(songsStore.selected_artist);
 
-    watch(selectedArtist, (newName) => {
-      songsStore.setArtistName(newName);
+    const activeGroup = ref(songsStore.active_group);
+
+    watch(activeGroup, (group_id) => {
+      songsStore.setActiveGroup(group_id);
     });
+
+    const setActiveGroup = (group_id) => {
+      songsStore.setActiveGroup(group_id);
+    };
 
     const songs = computed(() => songsStore.songs);
     const songs_for_groups = computed(() => songsStore.songs_for_groups);
     const selected_artist = computed(() => songsStore.selected_artist);
+    const active_group = computed(() => songsStore.active_group);
 
     return {
       selected_artist,
       songs,
-      songs_for_groups
+      songs_for_groups,
+      expanded,
+      changeView,
+      active_group,
+      setActiveGroup
     };
   },
 }
@@ -90,7 +150,7 @@ export default {
     height: 760px;
     margin: auto;
     padding: 1em;
-    transition: 1s;
+    transition: 0.1s;
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -100,18 +160,57 @@ export default {
       display: flex;
       align-items: flex-start;
       justify-content: space-around;
-      flex-wrap: wrap;
+      // flex-wrap: wrap;
       margin: 10px;
+      .expanded-group-card {
+        position: absolute;
+        top: 70px;
+        right: 100px;
+        width: 1100px;
+        min-width: 1100px;
+        border-radius: 20px;
+        height: 650px;
+        background: #fff;
+      }
+      .column {
+        transition: 0.1s;
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+        height: 700px;
+        width: 100%;
+        position: relative;
+      }
+      .column.expanded {
+        width: 1780px;
+        border: 1px solid red;
+        flex-direction: column;
+      }
+    }
+    .row.expanded {
+      flex-direction: row-reverse;
     }
   }
+  .group-level-wrapper.expanded {
+    .group-table {
+      position: absolute;
+    }
+    .expanded-group-card {
+      display: flex;
+    }
+  }
+
   .group-table {
     width: 400px;
+    max-height: 266px;
     box-shadow: 0 0 10px #000000;
     border-radius: 10px;
     cursor: pointer;
-    transition: 1s;
+    transition: 0.1s;
     margin-bottom: 30px;
     background: #ffffff;
+    position: absolute;
+    // position: relative;
 
     .title-line {
       padding: 0 20px;
@@ -184,7 +283,7 @@ export default {
           p {
             margin: 0 0 0 10px;
             text-align: left;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
           }
           &-link {
