@@ -2,9 +2,11 @@
   <div class="group-level-wrapper" :class="{expanded: expanded}">
     <div class="row" :class="{expanded: expanded}">
       <div class="expanded-group-card" v-if="expanded">
-          <pre style="border: 1px solid green">
-      {{ active_group.id }}
-    </pre>
+        <div style="border: 1px solid green">
+          <ul>
+            <li v-for="song in active_group.group_songs">{{song.title}}</li>
+          </ul>
+        </div>
       </div>
       <div class="column" :class="{expanded: expanded}">
         <div class="group-table"
