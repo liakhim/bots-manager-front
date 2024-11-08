@@ -8,54 +8,62 @@ export const useSongsStore = defineStore('songsStore', {
         artist_info: null,
         selected_artist: null,
         songs: [],
-        active_group: {},
+        active_group: null,
         songs_for_groups: [
             {
                 id: 0,
                 group_letter: 'A',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 0
             },
             {
                 id: 1,
                 group_letter: 'B',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 3
             },
             {
                 id: 2,
                 group_letter: 'C',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 0
             },
             {
                 id: 3,
                 group_letter: 'D',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 0
             },
             {
                 id: 4,
                 group_letter: 'E',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 0
             },
             {
                 id: 5,
                 group_letter: 'F',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 0
             },
             {
                 id: 6,
                 group_letter: 'G',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 0
             },
             {
                 id: 7,
                 group_letter: 'H',
                 group_songs: [],
+                group_matches: [],
                 group_progress: 0
             }
         ],
@@ -97,7 +105,49 @@ export const useSongsStore = defineStore('songsStore', {
 
                     if (groupIndex < this.songs_for_groups.length) {
                         song["score"] = 0;
+                        this.songs_for_groups[groupIndex].matches = [
+                            {
+                                id: 0,
+                                songs: []
+                            },
+                            {
+                                id: 1,
+                                songs: []
+                            },
+                            {
+                                id: 2,
+                                songs: []
+                            },
+                            {
+                                id: 3,
+                                songs: []
+                            },
+                            {
+                                id: 4,
+                                songs: []
+                            },
+                            {
+                                id: 5,
+                                songs: []
+                            }
+                        ];
+                        const songMappings3 = [
+                            [0, 1],
+                            [0, 2],
+                            [0, 3],
+                            [1, 2],
+                            [1, 3],
+                            [2, 3]
+                        ];
+
                         this.songs_for_groups[groupIndex].group_songs.push(song);
+                        this.songs_for_groups[groupIndex].matches.forEach((match, index) => {
+                            const [songIndex1, songIndex2] = songMappings3[index];
+                            match.is_over = false;
+                            match.winner = null
+                            match.songs.push(this.songs_for_groups[groupIndex].group_songs[songIndex1]);
+                            match.songs.push(this.songs_for_groups[groupIndex].group_songs[songIndex2]);
+                        });
                     }
 
                     const coupleIndex = Math.floor(index / 2);
@@ -119,8 +169,15 @@ export const useSongsStore = defineStore('songsStore', {
         setSelectedArtist(id) { // Экшен для изменения artist_name
             this.selected_artist = this.artist_info.find(v => v.id === id);
         },
+        addPoints(group_id, song_id, points, match_id) {
+            this.songs_for_groups.find(v => v.id === group_id).group_songs.find(v => v.id === song_id).score += points
+            this.songs_for_groups.find(v => v.id === group_id).matches.find(v => v.id === match_id).is_over = true
+            this.songs_for_groups.find(v => v.id === group_id).matches.find(v => v.id === match_id).winner = song_id
+        },
         setActiveGroup(group_id) {
-            this.active_group = this.songs_for_groups.find(v => v.id === group_id)
-        }
+            // console.log(this.songs_for_groups.map(v => v.matches))
+            this.active_group = group_id
+        },
+
     },
 });
